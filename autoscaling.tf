@@ -18,7 +18,7 @@ resource "aws_appautoscaling_policy" "cpu" {
     predefined_metric_specification {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
     }
-    target_value       = 5.0 # 70.0 - for production
+    target_value       = 15.0 # 70.0 - for production
     scale_in_cooldown  = 300
     scale_out_cooldown = 60
   }
@@ -41,3 +41,46 @@ resource "aws_appautoscaling_policy" "memory" {
     scale_out_cooldown = 60
   }
 }
+
+# 1. Оновлене правило EventBridge: відстежуємо події дій ECS Сервісу
+resource "aws_cloudwatch_event_rule" "autoscaling_events" {
+  name        = "vaultwarden-autoscaling-events"
+  description = "Capture ECS Service scaling actions"
+
+  event_pattern = jsonencode({
+    source      = ["aws.ecs"]
+    detail-type = ["ECS Service Action"]
+    detail = {
+      clusterArn = [aws_ecs_cluster.main.arn]
+    }
+  })
+}
+
+# 2. Перенаправлення подій EventBridge у SNS Topic з cloudwatch.tf
+resource "aws_cloudwatch_event_target" "autoscaling_sns" {
+  rule      = aws_cloudwatch_event_rule.autoscaling_events.name
+  target_id = "SendToSNS"
+  arn       = aws_sns_topic.alerts.arn
+}
+
+# 3. Політика доступу: дозволяємо EventBridge надсилати повідомлення в SNS Topic
+resource "aws_sns_topic_policy" "default" {
+  arn    = aws_sns_topic.alerts.arn
+  policy = data.aws_iam_policy_document.sns_topic_policy.json
+}
+
+data "aws_iam_policy_document" "sns_topic_policy" {
+  statement {
+    sid     = "AllowEventBridgeToPublishToSNS"
+    effect  = "Allow"
+    actions = ["SNS:Publish"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["events.amazonaws.com"]
+    }
+
+    resources = [aws_sns_topic.alerts.arn]
+  }
+}
+
