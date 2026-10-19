@@ -106,7 +106,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["ECS/ContainerInsights", "TaskCount", "ServiceName", aws_ecs_service.app.name, "ClusterName", aws_ecs_cluster.main.name, { "color" = "#2ca02c", "stat" = "Average" }]
+            ["ECS/ContainerInsights", "TaskCount", "ClusterName", aws_ecs_cluster.main.name, { "color" = "#2ca02c", "stat" = "Average" }]
           ]
           period = 60
           region = var.aws_region
