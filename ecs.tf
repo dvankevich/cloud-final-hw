@@ -7,11 +7,6 @@ resource "aws_ecs_cluster" "main" {
   }
 }
 
-resource "aws_cloudwatch_log_group" "ecs" {
-  name              = "/ecs/vaultwarden"
-  retention_in_days = 7
-}
-
 resource "random_password" "admin_token" {
   length  = 48
   special = false
