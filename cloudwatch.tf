@@ -106,8 +106,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/ECS", "RunningTaskCount", "ServiceName", aws_ecs_service.app.name, "ClusterName", aws_ecs_cluster.main.name, { "color" = "#2ca02c" }],
-            ["AWS/ECS", "DesiredTaskCount", "ServiceName", aws_ecs_service.app.name, "ClusterName", aws_ecs_cluster.main.name, { "color" = "#1f77b4", "stat" = "Maximum" }]
+            ["ECS/ContainerInsights", "RunningTaskCount", "ServiceName", aws_ecs_service.app.name, "ClusterName", aws_ecs_cluster.main.name, { "color" = "#2ca02c" }],
+            ["ECS/ContainerInsights", "DesiredTaskCount", "ServiceName", aws_ecs_service.app.name, "ClusterName", aws_ecs_cluster.main.name, { "color" = "#1f77b4", "stat" = "Maximum" }]
           ]
           period = 60
           stat   = "Average"
