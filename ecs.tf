@@ -24,7 +24,7 @@ resource "aws_ecs_task_definition" "app" {
   container_definitions = jsonencode([
     {
       name      = "vaultwarden"
-      image     = "vaultwarden/server:latest"
+      image = "${aws_ecr_repository.vaultwarden.repository_url}:latest"
       essential = true
       portMappings = [
         {
