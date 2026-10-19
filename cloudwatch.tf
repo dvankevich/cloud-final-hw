@@ -97,7 +97,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         }
       },
 
-      # Виджет 2: Кількість тасок / інстансів (Running vs Desired Tasks)
+      # Виджет 2: Кількість активних тасок (TaskCount)
       {
         type   = "metric"
         x      = 12
@@ -106,13 +106,11 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
         properties = {
           metrics = [
-            ["ECS/ContainerInsights", "RunningTaskCount", "ServiceName", aws_ecs_service.app.name, "ClusterName", aws_ecs_cluster.main.name, { "color" = "#2ca02c" }],
-            ["ECS/ContainerInsights", "DesiredTaskCount", "ServiceName", aws_ecs_service.app.name, "ClusterName", aws_ecs_cluster.main.name, { "color" = "#1f77b4", "stat" = "Maximum" }]
+            ["ECS/ContainerInsights", "TaskCount", "ServiceName", aws_ecs_service.app.name, "ClusterName", aws_ecs_cluster.main.name, { "color" = "#2ca02c", "stat" = "Average" }]
           ]
           period = 60
-          stat   = "Average"
           region = var.aws_region
-          title  = "ECS Running vs Desired Task Count"
+          title  = "ECS Running Task Count"
           view   = "timeSeries"
           stacked = false
           yAxis  = {
