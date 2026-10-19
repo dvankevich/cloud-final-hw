@@ -8,3 +8,9 @@ output "rds_endpoint" {
   value       = aws_db_instance.postgres.endpoint
   sensitive   = true
 }
+
+output "admin_token" {
+  description = "Generated admin token for Vaultwarden"
+  value       = random_password.admin_token.result
+  sensitive   = true
+}

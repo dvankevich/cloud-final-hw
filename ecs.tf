@@ -12,6 +12,11 @@ resource "aws_cloudwatch_log_group" "ecs" {
   retention_in_days = 7
 }
 
+resource "random_password" "admin_token" {
+  length  = 48
+  special = false
+}
+
 resource "aws_ecs_task_definition" "app" {
   family                   = "vaultwarden-task"
   network_mode             = "awsvpc"
@@ -41,6 +46,10 @@ resource "aws_ecs_task_definition" "app" {
         {
           name  = "WEBSOCKET_ENABLED"
           value = "true"
+        },
+        {
+            name  = "ADMIN_TOKEN"
+            value = random_password.admin_token.result
         }
       ]
       logConfiguration = {
