@@ -66,6 +66,12 @@ resource "aws_ecs_service" "app" {
   desired_count   = 1
   launch_type     = "FARGATE"
 
+  # Ігнорувати зміни desired_count при terraform apply, 
+  # щоб не заважати роботі Auto Scaling
+  lifecycle {
+    ignore_changes = [desired_count]
+  }
+
   network_configuration {
     subnets          = aws_subnet.private[*].id
     security_groups  = [aws_security_group.ecs.id]
