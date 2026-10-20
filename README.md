@@ -79,7 +79,7 @@ terraform output -raw admin_token
 ### Крок 3: Первинне налаштування та перевірка доступності
 
 1. **Підтвердження SNS-підписки:**
-   * Відкрийте вказаний у конфігурації e-mail (наприклад, `dvankevich@gmail.com`).
+   * Відкрийте вказаний у конфігурації e-mail.
    * Знайдіть лист від AWS SNS з темою *AWS Notification - Subscription Confirmation*.
    * Натисніть на посилання **Confirm subscription** для активації сповіщень.
 
@@ -113,7 +113,7 @@ terraform output -raw admin_token
    export const options = {
      insecureSkipTLSVerify: true,
      vus: 100,
-     duration: '5m',
+     duration: '6m',
    };
 
    export default function () {
